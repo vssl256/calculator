@@ -34,17 +34,35 @@ public class Controller {
     }
 
     @FXML
+    protected void onKeyTyped( KeyEvent event ) {
+        String ch = event.getCharacter();
+
+        if ( ch.matches( "[0-9]" ) ) {
+            double answer = calculator.inputDigit( Double.parseDouble( ch ) );
+            answerText.setText( String.valueOf( answer ) );
+            return;
+        }
+
+        Calculator.Operator op = switch ( ch ) {
+            case "+" -> Calculator.Operator.ADD;
+            case "-" -> Calculator.Operator.SUBTRACT;
+            case "*" -> Calculator.Operator.MULTIPLY;
+            case "/" -> Calculator.Operator.DIVIDE;
+            default  -> null;
+        };
+
+        if ( op != null ) {
+            calculator.inputOperator( op );
+        }
+    }
+
+    @FXML
     protected void onAction() {
-        double answer = calculator.getAnswer();
+        double answer = calculator.evaluate();
         textField.setText( String.valueOf( answer ) );
         textField.end();
     }
 
-    @FXML
-    protected void onKeyTyped( KeyEvent event ) {
-        double answer = calculator.input( event.getCharacter() );
-        answerText.setText( String.valueOf( answer ) );
-    }
 
     @FXML
     protected void reset() {
